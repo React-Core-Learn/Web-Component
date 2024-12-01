@@ -14,26 +14,37 @@ export default abstract class Component<TElement extends HTMLElement, Props = an
     this.props = props
     this.state = state
 
-    this.render()
     this.setup()
-    this.mounted()
+    this.render()
+    this.setEvent()
   }
-
-  abstract template(): string
 
   setup() {}
 
-  render() {
-    this.target.innerHTML = this.template()
-    this.mounted()
-  }
-
-  setState(newState: State) {
+  setState(newState: Partial<State>) {
     if (this.state) {
-      this.state = { ...this.state, newState }
+      this.state = { ...this.state, ...newState }
       this.render()
     }
   }
 
-  mounted() {}
+  abstract template(): string
+
+  render() {
+    this.target.innerHTML = this.template()
+    this.componentDidMount()
+  }
+
+  componentDidMount() {}
+
+  addEvent(eventType: keyof HTMLElementEventMap, selector: keyof HTMLElementTagNameMap | string, callback: EventListener) {
+    this.target.addEventListener(eventType, (event) => {
+      const target = event.target as HTMLElement
+      if (target.closest(selector)) {
+        callback(event)
+      }
+    })
+  }
+
+  setEvent() {}
 }
