@@ -23,4 +23,12 @@ export default class Component {
     this.state = { ...this.state, ...newState };
     this.render()
   }
+
+  addEvent(eventType: string, selector: string, callback: (event: Event) => void ) {
+    const children = [...this.$target.querySelectorAll(selector)];
+    this.$target.addEventListener(eventType, event => {
+      if (event && event.target instanceof HTMLElement && !event.target.closest(selector)) return false;
+      callback(event)
+    })
+  }
 }
