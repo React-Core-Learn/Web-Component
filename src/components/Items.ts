@@ -1,38 +1,101 @@
 import Component from "../core/Component";
 
+interface IItem {
+  id: number;
+  content: string;
+  active: boolean;
+}
+
 export default class Items extends Component {
   setup() {
-    this.state = { items: ['item1', 'item2'] }
+    this.state = { isFilter: 0, items: [{ id: 1, content: 'item1', active: false }, { id: 2, content: 'item2', active: true }] }
+  }
+
+  get filteredItems(): IItem[] {
+    const { isFilter, items } = this.state;
+    return items.filter(({ active }: { active: boolean }) => (isFilter === 1 && active) || (isFilter === 2 && !active) || (isFilter === 0) )
   }
 
   template() {
-    const { items } = this.state;
     return `
-    <ul>
-      ${items.map((item: any, key: number) =>
-        `<li>
-          ${item}
-          <button class="deleteButton" data-index="${key}">삭제</button>
-        </li>`).join('')}
-    </ul>
-    <button class="addButton">추가</button>
+    <header>
+      <input type="text" class="appender" placeholder="아이템 내용 입력">
+    </header>
+    <main>
+      <ul>
+        ${this.filteredItems.map(({ id, content, active }) =>
+      `<li data-id="${id}">
+            ${content}
+            <button class="toggleButton" data-id="${id}" style="color: ${active ? '#09F' : '#F09'}">
+              ${active ? '활성' : '비활성' }
+            </button>
+            <button class="deleteButton" data-id="${id}">삭제</button>
+          </li>`).join('')}
+      </ul>
+    </main>
+    <footer>
+      <button class="filterButton" data-is-filter="0">전체 보기</button>
+      <button class="filterButton" data-is-filter="1">활성 보기</button>
+      <button class="filterButton" data-is-filter="2">비활성 보기</button>
+    </footer>
     `
   }
 
   
   setEvent() {
-    // 이벤트 버블링 추상화 적용한 코드
-    this.addEvent('click', '.addButton', ({ target }) => {
+    this.addEvent<KeyboardEvent>('keyup', '.appender', (event) => {
+      const { key, target } = event
+      if (key !== 'Enter') return;
       const { items } = this.state;
-      this.setState({ items: [...items, `item${items.length + 1}`] })
+      const id = Math.max(0, ...items.map((v: IItem) => v.id)) + 1;
+      const content = (target as HTMLInputElement)?.value;
+      const active = false;
+      this.setState({
+        items: [
+          ...items,
+          {id, content, active}
+        ]
+      })
     })
+
     this.addEvent('click', '.deleteButton', ({ target }) => {
       const items = [...this.state.items];
-        if (target instanceof HTMLElement && target.dataset.index) {
-          items.splice(Number(target?.dataset?.index), 1)
-        }
+      if (target instanceof HTMLElement && target.dataset.id) {
+        const id = Number(target?.dataset?.id)
+        const index = items.findIndex(item => item.id === id)
+        items.splice(index, 1)
+        this.setState({ items })
+      }
+    })
+
+    this.addEvent('click', '.toggleButton', ({ target }) => {
+      const items = [...this.state.items];
+      if (target instanceof HTMLElement && target.dataset.id) {
+        const id = Number(target?.dataset?.id)
+        const index = items.findIndex(v => v.id === id);
+        items[index].active = !items[index].active;
+      }
       this.setState({ items })
     })
+
+    this.addEvent('click', '.filterButton', ({ target }) => {
+      if (target instanceof HTMLElement && target.dataset.isFilter) {
+        this.setState({ isFilter: Number(target.dataset.isFilter) })
+      }
+    })
+
+    // 이벤트 버블링 추상화 적용한 코드
+    // this.addEvent('click', '.addButton', ({ target }) => {
+    //   const items = [...this.state.items];
+    //   this.setState({ items: [...items, `item${items.length + 1}`] })
+    // })
+    // this.addEvent('click', '.deleteButton', ({ target }) => {
+    //   const items = [...this.state.items];
+    //     if (target instanceof HTMLElement && target.dataset.index) {
+    //       items.splice(Number(target?.dataset?.index), 1)
+    //     }
+    //   this.setState({ items })
+    // })
     // 이벤트 버블링 적용한 코드
     // this.$target.addEventListener('click', ({ target }) => {
     //   if (!target || !(target instanceof HTMLElement)) return;
