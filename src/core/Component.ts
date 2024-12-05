@@ -10,21 +10,27 @@ export default class Component {
   $target: HTMLElement;
   props: IProps;
   state: IState;
+  isMounted: boolean;
 
   constructor($target: HTMLElement, props: IProps = {}) {
     this.$target = $target;
     this.props = props;
     this.state = {};
+    this.isMounted = false;
     this.setEvent();
     this.setup();
     this.render();
   }
   setup() { };
-  mounted() { };
+  mounted() {
+    if (!this.isMounted) {
+      this.isMounted = true;
+    }
+  };
   template() { return ''; }
   render() {
     this.$target.innerHTML = this.template();
-    this.mounted()
+    !this.isMounted && this.mounted()
   }
   setEvent() { }
   setState(newState: IState) {
