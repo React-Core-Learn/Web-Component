@@ -1,10 +1,10 @@
-import Items from "./components/Items";
+import App from './App'
 
 class Main {
   constructor(){
-    const $main: Element | null = document.querySelector('#app');
-    if ($main instanceof HTMLElement) {
-      new Items($main);
+    const $app: Element | null = document.querySelector('#app');
+    if ($app instanceof HTMLElement) {
+      new App($app);
     } else {
       console.error('Element with ID "app" not found.');
     }

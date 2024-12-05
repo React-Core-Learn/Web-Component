@@ -2,21 +2,29 @@ interface IState {
   [key: string]: any;
 }
 
+interface IProps {
+  [key: string]: any;
+}
+
 export default class Component {
   $target: HTMLElement;
+  props: IProps;
   state: IState;
 
-  constructor($target: HTMLElement) {
+  constructor($target: HTMLElement, props: IProps = {}) {
     this.$target = $target;
+    this.props = props;
     this.state = {};
     this.setEvent();
     this.setup();
     this.render();
   }
   setup() { };
+  mounted() { };
   template() { return ''; }
   render() {
     this.$target.innerHTML = this.template();
+    this.mounted()
   }
   setEvent() { }
   setState(newState: IState) {
