@@ -20,6 +20,7 @@ export default class App extends Component {
         <main data-component="items"></main>
       <footer data-component="item-filter"></footer>
     `
+    // 컴포넌트 분할 전
     // return `
     // <header>
     //   <input type="text" class="appender" placeholder="아이템 내용 입력">
@@ -100,21 +101,22 @@ export default class App extends Component {
     this.setState({ isFilter })
   }
 
+  // 컴포넌트 분할 전
   // setEvent() {
-  //   this.addEvent<KeyboardEvent>('keyup', '.appender', (event) => {
-  //     const { key, target } = event
-  //     if (key !== 'Enter') return;
-  //     const { items } = this.state;
-  //     const id = Math.max(0, ...items.map((v: IItem) => v.id)) + 1;
-  //     const content = (target as HTMLInputElement)?.value;
-  //     const active = false;
-  //     this.setState({
-  //       items: [
-  //         ...items,
-  //         {id, content, active}
-  //       ]
-  //     })
-  //   })
+    //   this.addEvent<KeyboardEvent>('keyup', '.appender', (event) => {
+    //     const { key, target } = event
+    //     if (key !== 'Enter') return;
+    //     const { items } = this.state;
+    //     const id = Math.max(0, ...items.map((v: IItem) => v.id)) + 1;
+    //     const content = (target as HTMLInputElement)?.value;
+    //     const active = false;
+    //     this.setState({
+    //       items: [
+    //         ...items,
+    //         {id, content, active}
+    //       ]
+    //     })
+    //   })
 
     // this.addEvent('click', '.deleteButton', ({ target }) => {
     //   const items = [...this.state.items];
@@ -140,7 +142,7 @@ export default class App extends Component {
     //   if (target instanceof HTMLElement && target.dataset.isFilter) {
     //     this.setState({ isFilter: Number(target.dataset.isFilter) })
     //   }
-    // })
+  // })
 
     // 이벤트 버블링 추상화 적용한 코드
     // this.addEvent('click', '.addButton', ({ target }) => {
@@ -170,6 +172,7 @@ export default class App extends Component {
     //     this.setState({ items })
     //   }
     // })
+  
     // 이벤트 버블링 적용 전 코드
     // this.$target.querySelectorAll('.deleteButton')?.forEach(deleteButton => deleteButton?.addEventListener('click', ({target}) => {
     //   const items  = [...this.state.items];
