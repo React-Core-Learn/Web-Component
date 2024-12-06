@@ -1,18 +1,24 @@
-interface ComponentOptions<TElement = HTMLElement, Props = any, State = any> {
+type ComponentInternalRecord = Record<string, any>
+
+interface ComponentOptions<TElement = HTMLElement, Props = any, State extends ComponentInternalRecord = ComponentInternalRecord> {
   target: TElement
   props?: Props
   state?: State
 }
 
-export default abstract class Component<TElement extends HTMLElement, Props = any, State = any> {
+export default abstract class Component<
+  TElement extends HTMLElement,
+  Props = any,
+  State extends ComponentInternalRecord = ComponentInternalRecord
+> {
   target: TElement
   props?: Props
-  state?: State
+  private _state?: State
 
-  constructor({ target, props, state }: ComponentOptions<TElement, Props, State>) {
+  constructor({ target, props, state = {} as State }: ComponentOptions<TElement, Props, State>) {
     this.target = target
     this.props = props
-    this.state = state
+    this._state = state
 
     this.setup()
     this.render()
@@ -21,9 +27,20 @@ export default abstract class Component<TElement extends HTMLElement, Props = an
 
   setup() {}
 
-  setState(newState: Partial<State>) {
-    if (this.state) {
-      this.state = { ...this.state, ...newState }
+  get state() {
+    return this._state!
+  }
+
+  set state(newState: State) {
+    if (this._state) {
+      this._state = { ...this._state, ...newState }
+      this.render()
+    }
+  }
+
+  setState(newState: State) {
+    if (this._state) {
+      this._state = { ...this._state, ...newState }
       this.render()
     }
   }
