@@ -28,7 +28,7 @@ export default abstract class Component<
   setup() {}
 
   get state() {
-    return this._state!
+    return { ...this._state! }
   }
 
   set state(newState: State) {
