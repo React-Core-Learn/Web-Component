@@ -31,7 +31,7 @@ class App extends Component<HTMLDivElement, {}, TodoState> {
       props: {
         todos: this.state!.todos,
         deleteTodo: this.deleteTodo.bind(this),
-        activeToggle: this.activeToggle.bind(this),
+        toggleActive: this.toggleTodoActive.bind(this),
       },
     })
   }
@@ -59,7 +59,7 @@ class App extends Component<HTMLDivElement, {}, TodoState> {
     this.setState({ todos: filteredTodo })
   }
 
-  activeToggle(todoId: number) {
+  toggleTodoActive(todoId: number) {
     const updateTodo = this.state!.todos.map((todo) => (todo.id === todoId ? { ...todo, isActive: !todo.isActive } : todo))
     this.setState({ todos: updateTodo })
   }

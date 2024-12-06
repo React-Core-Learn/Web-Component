@@ -4,7 +4,7 @@ import { Todo } from "../types"
 interface TodoListProps {
   todos: Todo[]
   deleteTodo: (todoId: number) => void
-  activeToggle: (todoId: number) => void
+  toggleActive: (todoId: number) => void
 }
 
 export default class TodoList extends Component<HTMLUListElement, TodoListProps> {
@@ -35,7 +35,7 @@ export default class TodoList extends Component<HTMLUListElement, TodoListProps>
   setEvent(): void {
     this.addEvent("click", "#toggle-button", (event) => {
       const todoId = this.getTodoId(event.target as HTMLElement)
-      this.props!.activeToggle(todoId)
+      this.props!.toggleActive(todoId)
     })
 
     this.addEvent("click", "#delete-button", (event) => {
