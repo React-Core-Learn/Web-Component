@@ -6,7 +6,13 @@ interface IItem {
   active: boolean;
 }
 
-export default class Items extends Component {
+interface IListItems {
+  filteredItems: IItem[];
+  deleteItem: (id: number) => void;
+  toggleItem: (id: number) => void;
+}
+
+export default class ListItems extends Component<IListItems> {
   template() {
     const { filteredItems } = this.props
     return `

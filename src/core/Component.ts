@@ -1,21 +1,15 @@
-interface IState {
-  [key: string]: any;
-}
+type TComponentData = Record<string, any>
 
-interface IProps {
-  [key: string]: any;
-}
-
-export default class Component {
+export default class Component<Props = TComponentData, State = TComponentData> {
   $target: HTMLElement;
-  props: IProps;
-  state: IState;
+  props: Props;
+  state: State;
   isMounted: boolean;
 
-  constructor($target: HTMLElement, props: IProps = {}) {
+  constructor($target: HTMLElement, props: Props) {
     this.$target = $target;
     this.props = props;
-    this.state = {};
+    this.state = {} as State;
     this.isMounted = false;
     this.setEvent();
     this.setup();
@@ -24,6 +18,7 @@ export default class Component {
   setup() { };
   mounted() {
     if (!this.isMounted) {
+      console.log(this.mounted)
       this.isMounted = true;
     }
   };
@@ -33,12 +28,12 @@ export default class Component {
     !this.isMounted && this.mounted()
   }
   setEvent() { }
-  setState(newState: IState) {
+  setState(newState: State) {
     this.state = { ...this.state, ...newState };
     this.render()
   }
 
-  addEvent<T extends Event>(eventType: string, selector: string, callback: (event: T) => void ) {
+  addEvent<T extends Event>(eventType: keyof HTMLElementEventMap, selector: keyof HTMLElementTagNameMap | string, callback: (event: T) => void ) {
     this.$target.addEventListener(eventType, event => {
       if (event && event.target instanceof HTMLElement && !event.target.closest(selector)) return false;
       callback(event as T)

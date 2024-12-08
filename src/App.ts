@@ -1,6 +1,6 @@
 import Component from "./core/Component";
-import Items from "./components/Items";
-import ItemAppender from "./components/ItemAppender";
+import ListItems from "./components/ListItems";
+import ItemAdd from "./components/ItemAdd";
 import ItemFilter from "./components/ItemFilter";
 
 interface IItem {
@@ -16,7 +16,7 @@ export default class App extends Component {
 
   template() {
     return `    
-      <header data-component="item-appender"></header>
+      <header data-component="item-add"></header>
         <main data-component="items"></main>
       <footer data-component="item-filter"></footer>
     `
@@ -46,32 +46,32 @@ export default class App extends Component {
   }
 
   mounted() {
-    const { filteredItems, addItem, deleteItem, toggleItem, filterItem } = this;
-    const $itemAppender = this.$target.querySelector('[data-component="item-appender"]')
-    const $items = this.$target.querySelector('[data-component="items"]')
-    const $itemFilter = this.$target.querySelector('[data-component="item-filter"]')
+    const { filteredItems, addListItem, deleteItem, toggleItem, filterItem } = this;
+    const $itemAdd = this.$target.querySelector('[data-component="item-add"]') as HTMLInputElement;
+    const $listItems = this.$target.querySelector('[data-component="items"]') as HTMLUListElement;
+    const $itemFilter = this.$target.querySelector('[data-component="item-filter"]') as HTMLButtonElement;
 
-    new ItemAppender(($itemAppender as HTMLElement), {
-      addItem: addItem.bind(this)
+    new ItemAdd(($itemAdd), {
+      addListItem: addListItem.bind(this)
     })
 
-    new Items(($items as HTMLElement), {
+    new ListItems(($listItems), {
       filteredItems,
       deleteItem: deleteItem.bind(this),
       toggleItem: toggleItem.bind(this)
     })
 
-    new ItemFilter(($itemFilter as HTMLElement), {
+    new ItemFilter(($itemFilter), {
       filterItem: filterItem.bind(this)
     })
   }
 
   get filteredItems(): IItem[] {
     const { isFilter, items } = this.state;
-    return items.filter(({ active }: { active: boolean }) => (isFilter === 1 && active) || (isFilter === 2 && !active) || (isFilter === 0) )
+    return items.filter(({ active }: IItem) => (isFilter === 1 && active) || (isFilter === 2 && !active) || (isFilter === 0) )
   }
 
-  addItem(content: string) {
+  addListItem(content: string) {
     const { items } = this.state;
     const id = Math.max(0, ...items.map((v: IItem) => v.id)) + 1;
     const active = false;

@@ -4,14 +4,7 @@ interface IItemFilter {
   filterItem: (isFilter: number ) => void;
 }
 
-export default class ItemFilter extends Component {
-  props: IItemFilter;
-
-  constructor($target: HTMLElement, props: IItemFilter) {
-    super($target, props);
-    this.props = props;
-  }
-
+export default class ItemFilter extends Component<IItemFilter> {
   template() {
     return `
       <button class="filterButton" data-is-filter="0">전체 보기</button>
